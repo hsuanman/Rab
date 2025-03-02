@@ -23,7 +23,9 @@ GOOGLE_REDIRECT_URI = os.getenv('GOOGLE_REDIRECT_URI')
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
 REDIRECT_URI = 'https://line-bot-0960.onrender.com/callback'  # 替換為你的實際 redirect_uri
 
-
+token_path = 'token.json'
+if os.path.exists(token_path):
+    creds = Credentials.from_authorized_user_file(token_path, SCOPES)
 
 flow = Flow.from_client_config(
     {
@@ -38,6 +40,31 @@ flow = Flow.from_client_config(
     scopes=SCOPES,
     redirect_uri=GOOGLE_REDIRECT_URI,
 )
+
+if not os.path.exists('token.json'):
+    print("未找到 token.json 文件")
+    # 執行 OAuth2 授權流程
+    flow = Flow.from_client_secrets_file(
+        'client_secret.json',
+        scopes=SCOPES,
+        redirect_uri=REDIRECT_URI
+    )
+    auth_url, _ = flow.authorization_url(prompt='consent')
+    print(f"請訪問以下 URL 完成授權：{auth_url}")
+    # 等待用戶完成授權並生成 token.json
+
+import os
+from google.oauth2.credentials import Credentials
+
+creds = Credentials(
+    token=os.getenv('GOOGLE_ACCESS_TOKEN'),
+    refresh_token=os.getenv('GOOGLE_REFRESH_TOKEN'),
+    token_uri=os.getenv('GOOGLE_TOKEN_URI'),
+    client_id=os.getenv('GOOGLE_CLIENT_ID'),
+    client_secret=os.getenv('GOOGLE_CLIENT_SECRET'),
+    scopes=SCOPES
+)
+
 
 
 app = Flask(__name__)
