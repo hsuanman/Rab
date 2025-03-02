@@ -19,6 +19,12 @@ GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
 GOOGLE_CLIENT_SECRET = os.getenv('GOOGLE_CLIENT_SECRET')
 GOOGLE_REDIRECT_URI = os.getenv('GOOGLE_REDIRECT_URI')
 
+# Google OAuth2 設定
+SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
+REDIRECT_URI = 'https://line-bot-0960.onrender.com/callback'  # 替換為你的實際 redirect_uri
+
+
+
 flow = Flow.from_client_config(
     {
         "web": {
@@ -48,10 +54,6 @@ CHANNEL_SECRET = os.getenv('CHANNEL_SECRET')
 # LINE Bot 設定
 configuration = Configuration(access_token=os.getenv('CHANNEL_ACCESS_TOKEN'))
 handler = WebhookHandler(os.getenv('CHANNEL_SECRET'))
-
-# Google OAuth2 設定
-SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
-REDIRECT_URI = 'https://4b55-36-231-192-94.ngrok-free.app/callback'  # 替換為你的實際 redirect_uri
 
 # 初始化 OAuth2 Flow
 flow = Flow.from_client_secrets_file(
